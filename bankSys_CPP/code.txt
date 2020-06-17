@@ -30,7 +30,7 @@ using namespace std;
 int main()
 {
     cout<<"+----------------------+\n";
-    cout<<"+    欢迎光临CSDN银行  +\n";
+    cout<<"+    欢迎光临****银行  +\n";
     cout<<"+----------------------+\n";
     Bank b;
     if (pass())
