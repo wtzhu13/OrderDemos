@@ -37,7 +37,16 @@ void PhoneAddressBook::getContacesNum()
  * */
 void PhoneAddressBook::addUser()
 {
-
+    // 如果联系人达到1000则表明存储满了
+    this->getContacesNum();
+    if (this->contacesNum >= 1000)
+    {
+        cout << "空间不足" << endl;
+        return;
+    }
+    PhoneContace phoneContace;
+    cin >> phoneContace;
+    cout << phoneContace << endl;
 }
 
 void PhoneAddressBook::delUser()

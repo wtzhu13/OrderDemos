@@ -10,19 +10,34 @@ User::~User()
 }
 
 /**
- * Ê∑ªÂä†Áî®Êà∑
+ * –¬‘ˆ”√ªß
 */
 void User::addUser()
 {
-    // ÊòæÁ§∫‰∏ªËèúÂçï
-    ui.showAddUserMenu(1);
+    // œ‘ æ≤Àµ•
+    ui.showAddUserMenu(0);
     int choiceSaveAdd;
     cin >> choiceSaveAdd;
-    // ÊòæÁ§∫ËæìÂÖ•‰ø°ÊÅØËèúÂçï
-    ui.showAddUserMenu(2);
-    string name;
-    string nativePlace;
-    string phoneNum;
-    string qqNum;
-    cin >> name >> nativePlace >> phoneNum >> qqNum;
+    // œ‘ æ¥Ê¥¢∑Ω Ω≤Àµ•
+    ui.showAddUserMenu(choiceSaveAdd);
+    // ¿˚”√∂‡Îƒ µœ÷µ˜”√
+    switch (choiceSaveAdd)
+    {
+    case 1:
+        this->saveUser(this->pab);
+        break;
+    case 2:
+        this->saveUser(this->pcab);
+        break;
+    default:
+        break;
+    }
+}
+
+/**
+ * ±£¥Ê”√ªß–≈œ¢
+*/
+void User::saveUser(AddressBook &adb)
+{
+    adb.addUser();
 }

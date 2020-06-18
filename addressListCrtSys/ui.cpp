@@ -31,16 +31,22 @@ void Ui::showAddUserMenu(int i)
 {
     switch (i)
     {
-    case 1:
+    case 0:
         cout << "请选择存储方式：" << endl;
         cout << "1.手机存储" << endl;
         cout << "2.手机卡存储" << endl;
         cout << "请选择存储方式编号：";
         break;
+    case 1:
+        cout << "请输入联系人信息：" << endl;
+        cout << "格式：姓名 电话号码 籍贯 QQ，中间空格隔开 " << endl;
+        cout << "如：Tom 13511112222 Beijing 123456987" << endl;
+        cout << "请输入信息：";
+        break;
     case 2:
         cout << "请输入联系人信息：" << endl;
-        cout << "格式：姓名 籍贯 电话号码 QQ，中间空格隔开 " << endl;
-        cout << "如：Tom Beijing 13511112222 123456987" << endl;
+        cout << "格式：姓名 电话号码，中间空格隔开 " << endl;
+        cout << "如：Tom 13511112222" << endl;
         cout << "请输入信息：";
         break;
     default:
