@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
 class AddressBook
 {
 private:
@@ -11,8 +13,8 @@ public:
     virtual void addUser() = 0;
     virtual void delUser() = 0;
     virtual void showAllUser() = 0;
-    virtual void modifyInfo() = 0;
-    virtual void findUserInfo() = 0;
+    void modifyInfo(string phoneNum){};
+    void findUserInfo(string phoneNum){ };
     virtual ~AddressBook(){};
 };
 

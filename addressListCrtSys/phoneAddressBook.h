@@ -22,8 +22,8 @@ public:
     void addUser();
     void delUser();
     void showAllUser();
-    void modifyInfo();
-    void findUserInfo();
+    void modifyInfo(string phoneNum);
+    void findUserInfo(string name);
     void getContacesNum();
     void initContacesList();
     int isExist(string phoneNum);

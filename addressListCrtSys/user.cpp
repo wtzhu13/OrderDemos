@@ -48,6 +48,7 @@ void User::saveUser(AddressBook &adb)
 void User::delContase()
 {
     pab.delUser();
+    pcab.delUser();
 }
 
 /**
@@ -55,7 +56,11 @@ void User::delContase()
 */
 void User::findContase()
 {
-    pab.findUserInfo();
+    string name;
+    cout << "请输入姓名：" ;
+    cin >> name;
+    pab.findUserInfo(name);
+    pcab.findUserInfo(name);
 }
 
 /**
@@ -63,7 +68,11 @@ void User::findContase()
 */
 void User::modifyInfo()
 {
-    pab.modifyInfo();
+    string phoneNum;
+    cout << "请输入号码：" ;
+    cin >> phoneNum;
+    pab.modifyInfo(phoneNum);
+    pcab.modifyInfo(phoneNum);
 }
 
 /**
@@ -71,8 +80,8 @@ void User::modifyInfo()
 */
 void User::showAllContaces()
 {
-    pcab.initContacesList();
-    pab.initContacesList();
+    // pcab.initContacesList();
+    // pab.initContacesList();
     // 先遍历手机中的
     for (int i = 0; i < pab.contacesNum; i++)
     {
@@ -132,6 +141,28 @@ void User::fromPhoneToCard()
 */
 void User::fromCardToPhone()
 {
+    pcab.initContacesList();
+    pab.initContacesList();
+    for (int i = 0; i < pcab.contacesNum; i++)
+    {
+        int flag = 0;
+        for (int j = 0; j < pab.contacesNum; j++)
+        {
+            if (pab.contaceList[i]->phoneNum == pcab.contaceList[j]->phoneNum)
+            {
+                flag = 1;
+                break;
+            }
+                       
+        } 
+        if (!flag)
+        {
+            ofstream ofs;
+            ofs.open("phoneList.txt", ios::app);
+            ofs << pcab.contaceList[i]->name << " " << pcab.contaceList[i]->phoneNum << endl;
+            ofs.close();
+        }  
+    }
     cout << "导入成功" << endl;
 }
 

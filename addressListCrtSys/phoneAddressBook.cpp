@@ -102,11 +102,12 @@ void PhoneAddressBook::addUser()
     // cout << "添加用户成功!!!" << endl;
     // 释放原有空间
     delete[] this->contaceList;
-    
+    this->contaceList = NULL;
     // 将新的地址更新到数组
     this->contaceList = newContaceList;
     // 释放新的空间
     delete[] newContaceList;
+    newContaceList = NULL;
     // 用户数量增加
     this->contacesNum++;
     // cout << "ok" << endl;
@@ -203,15 +204,14 @@ void PhoneAddressBook::showAllUser()
 /***
  * 修改
  * */
-void PhoneAddressBook::modifyInfo()
+void PhoneAddressBook::modifyInfo(string phoneNum)
 {
-    string phoneNum;
-    cout << "请输入号码：" ;
-    cin >> phoneNum;
+    
     int index = this->isExist(phoneNum);
     if (index == -1)
     {
         cout << "手机中不存在改联系人" << endl;
+        return;
     }
     this->ui.showAddUserMenu(1);
     PhoneContace *phoneContace = NULL;
@@ -225,17 +225,20 @@ void PhoneAddressBook::modifyInfo()
 /***
  * 查询
  * */
-void PhoneAddressBook::findUserInfo()
+void PhoneAddressBook::findUserInfo(string name)
 {
-    string name;
-    cout << "请输入姓名：" ;
-    cin >> name;
+    int flag = 0;
+    // this->initContacesList();
     for (int i = 0; i < this->contacesNum; i++)
     {
         if (this->contaceList[i]->name == name)
         {
+            flag = 1;
             cout << *(this->contaceList[i]) << endl;
         }      
     }
-    
+    if (!flag)
+    {
+        cout << "卡中不存在该联系人" << endl;
+    }
 }

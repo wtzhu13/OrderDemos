@@ -156,6 +156,9 @@ void PhoneCardAddressBook::saveToFile()
     ofs.close();
 }
 
+/***
+ * 删除
+ * */
 void PhoneCardAddressBook::delUser()
 {
     string phoneNum;
@@ -188,15 +191,13 @@ void PhoneCardAddressBook::showAllUser()
 /***
  * 查询
  * */
-void PhoneCardAddressBook::modifyInfo()
+void PhoneCardAddressBook::modifyInfo(string phoneNum)
 {
-    string phoneNum;
-    cout << "请输入号码：" ;
-    cin >> phoneNum;
     int index = this->isExist(phoneNum);
     if (index == -1)
     {
-        cout << "手机中不存在改联系人" << endl;
+        cout << "卡中不存在改联系人" << endl;
+        return;
     }
     this->ui.showAddUserMenu(2);
     PhoneCardContace *phoneCardContace = NULL;
@@ -207,16 +208,20 @@ void PhoneCardAddressBook::modifyInfo()
     cout << "修改成功" << endl;
 }
 
-void PhoneCardAddressBook::findUserInfo()
+void PhoneCardAddressBook::findUserInfo(string name)
 {
-    string name;
-    cout << "请输入姓名：" ;
-    cin >> name;
+    int flag = 0;
     for (int i = 0; i < this->contacesNum; i++)
     {
         if (this->contaceList[i]->name == name)
         {
+            flag = 1;
             cout << *(this->contaceList[i]) << endl;
         }      
     }
+    if (!flag)
+    {
+        cout << "卡中不存在该联系人" << endl;
+    }
+    
 }
