@@ -98,10 +98,12 @@ void PhoneCardAddressBook::addUser()
     // cout << "娣诲姞鐢ㄦ埛鎴愬姛!!!" << endl;
     // 释放原有空间
     delete[] this->contaceList;
+    this->contaceList = NULL;
     // 将新的地址给列表指针
     this->contaceList = newContaceList;
     // 释放新空间
     delete[] newContaceList;
+    newContaceList = NULL;
     // 用户数加一
     this->contacesNum++;
 
@@ -114,22 +116,107 @@ void PhoneCardAddressBook::addUser()
 
 }
 
+/***
+ * 判断联系人是否存在
+ * */
+int PhoneCardAddressBook::isExist(string phoneNum)
+{
+    int index = -1;
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        // 找到电话相同的就返回索引
+        if (this->contaceList[i]->phoneNum == phoneNum)
+        {
+            index = i;
+            break;
+        }     
+    }
+    // 没有就直接返回0
+    return index;
+}
+
+/***
+ * 保存到本地
+ * */
+void PhoneCardAddressBook::saveToFile()
+{
+    ofstream ofs;
+    ofs.open("cardList.txt", ios::out);
+    if (!ofs.is_open())
+    {
+        cout << "cardList.txt打开失败" << endl;
+        return;
+    }
+    
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        ofs << this->contaceList[i]->name << " "
+            << this->contaceList[i]->phoneNum << endl;
+    }
+    ofs.close();
+}
+
 void PhoneCardAddressBook::delUser()
 {
-
+    string phoneNum;
+    cout << "请输入号码：";
+    cin >> phoneNum;
+    int index = this->isExist(phoneNum);
+    if (index != -1)
+    {
+        for (int i = index; i < this->contacesNum-1; i++)
+        {
+            this->contaceList[i] = this->contaceList[i+1];
+        }   
+        this->contacesNum--;
+        this->saveToFile();
+        cout << "删除成功" << endl;    
+    }
 }
 
+/***
+ * 查看
+ * */
 void PhoneCardAddressBook::showAllUser()
 {
-
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        cout << *(this->contaceList[i]) << endl;
+    }
 }
 
+/***
+ * 查询
+ * */
 void PhoneCardAddressBook::modifyInfo()
 {
-
+    string phoneNum;
+    cout << "请输入号码：" ;
+    cin >> phoneNum;
+    int index = this->isExist(phoneNum);
+    if (index == -1)
+    {
+        cout << "手机中不存在改联系人" << endl;
+    }
+    this->ui.showAddUserMenu(2);
+    PhoneCardContace *phoneCardContace = NULL;
+    phoneCardContace = new PhoneCardContace();
+    cin >> *phoneCardContace;
+    this->contaceList[index] = phoneCardContace;
+    this->saveToFile();
+    cout << "修改成功" << endl;
 }
 
 void PhoneCardAddressBook::findUserInfo()
 {
-    
+    string name;
+    cout << "请输入姓名：" ;
+    cin >> name;
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        if (this->contaceList[i]->name == name)
+        {
+            cout << *(this->contaceList[i]) << endl;
+        }      
+    }
 }

@@ -89,32 +89,35 @@ void PhoneAddressBook::addUser()
     // 开辟一块新的空间
     PhoneContace **newContaceList = new PhoneContace*[newContacesNum];
     
-    cout << *contaceList[0] << endl;
+    // cout << *contaceList[0] << endl;
     //将原空间下内容存放到新空间下
-    
+    // cout << "ok0" << endl;
     for (int i = 0; i < this->contacesNum; i++)
     {
         newContaceList[i] = this->contaceList[i];
     }
-
+    // cout << "ok1" << endl;
     // 将新增的用户放进数组
     newContaceList[newContacesNum] = phoneContace;
     // cout << "添加用户成功!!!" << endl;
     // 释放原有空间
     delete[] this->contaceList;
+    
     // 将新的地址更新到数组
     this->contaceList = newContaceList;
     // 释放新的空间
     delete[] newContaceList;
     // 用户数量增加
     this->contacesNum++;
-
+    // cout << "ok" << endl;
     // 将信息存放到本地文件中
     ofstream ofs;
     ofs.open("phoneList.txt", ios::app);
+    cout << "save" << endl;
     ofs << phoneContace->name << " " << phoneContace->phoneNum 
         << " " << phoneContace->nativePlace << " " << phoneContace->qqNum << endl;
     ofs.close();
+    // this->saveToFile();
     cout << "添加用户成功！" << endl;
 
 }
@@ -165,6 +168,7 @@ void PhoneAddressBook::delUser()
  * */
 void PhoneAddressBook::saveToFile()
 {
+    // cout << "save" << endl;
     ofstream ofs;
     ofs.open("phoneList.txt", ios::out);
     if (!ofs.is_open())
@@ -181,6 +185,8 @@ void PhoneAddressBook::saveToFile()
             << this->contaceList[i]->qqNum << endl;
     }
     ofs.close();
+    // cout << "save end" << endl;
+
 }
 
 /***

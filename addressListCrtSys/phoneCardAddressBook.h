@@ -4,6 +4,7 @@
 #include <fstream>
 #include "addressBook.h"
 #include "phoneCardContace.h"
+#include "ui.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ private:
 public:
     int contacesNum;
     PhoneCardContace **contaceList;
+    Ui ui;
 
     PhoneCardAddressBook(/* args */);
     ~PhoneCardAddressBook();
@@ -24,6 +26,8 @@ public:
     void findUserInfo();
     void getContacesNum();
     void initContacesList();
+    int isExist(string phoneNum);
+    void saveToFile();
 };
 
 

@@ -21,6 +21,7 @@ void Ui::showMainMenu()
     cout << "5.浏览" << endl;
     cout << "6.从手机复制到卡" << endl;
     cout << "7.从卡复制到手机" << endl;
+    cout << "0.退出" << endl;
     cout << "请选择功能序号：";
 }
 

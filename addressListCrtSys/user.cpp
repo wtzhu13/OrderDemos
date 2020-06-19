@@ -132,6 +132,6 @@ void User::fromPhoneToCard()
 */
 void User::fromCardToPhone()
 {
-
+    cout << "导入成功" << endl;
 }
 
