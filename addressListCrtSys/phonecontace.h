@@ -13,13 +13,15 @@ class PhoneContace : public PhoneCardContace
     friend ostream& operator<<(ostream& out, PhoneContace& p);
     friend istream& operator>>(istream& in, PhoneContace& A);
 private:
+    
+public:
     string nativePlace;
     string qqNum;
-public:
+
     PhoneContace();
     ~PhoneContace();
-    void setInfo();
-    void modifyInfo();
+    void setInfo(string name, string phoneNum, string nativePlace, string QQNum);
+    void modifyInfo(string name, string phoneNum, string nativePlace, string QQNum);
 };
 
 

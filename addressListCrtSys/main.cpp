@@ -14,22 +14,22 @@ int main()
         user.addUser();
         break;
     case 2:
-        /* code */
+        user.delContase();
         break;
     case 3:
-        /* code */
+        user.modifyInfo();
         break;
     case 4:
-        /* code */
+        user.findContase();
         break;
     case 5:
-        /* code */
+        user.showAllContaces();
         break;
     case 6:
-        /* code */
+        user.fromPhoneToCard();
         break;
     case 7:
-        /* code */
+        user.fromCardToPhone();
         break;
     default:
         break;

@@ -18,6 +18,12 @@ public:
     User(/* args */);
     void addUser();
     void saveUser(AddressBook &adb);
+    void delContase();
+    void findContase();
+    void modifyInfo();
+    void showAllContaces();
+    void fromPhoneToCard();
+    void fromCardToPhone();
     ~User();
 };
 

@@ -5,16 +5,18 @@
 #include <vector>
 #include "addressBook.h"
 #include "phonecontace.h"
+#include "ui.h"
 
 using namespace std;
 
 class PhoneAddressBook : public AddressBook
 {
 private:
-    PhoneContace *contaceList;
+    
 public:
     int contacesNum;
-
+    PhoneContace **contaceList;
+    Ui ui;
 
     PhoneAddressBook(/* args */);
     void addUser();
@@ -23,6 +25,9 @@ public:
     void modifyInfo();
     void findUserInfo();
     void getContacesNum();
+    void initContacesList();
+    int isExist(string phoneNum);
+    void saveToFile();
     ~PhoneAddressBook();
 };
 

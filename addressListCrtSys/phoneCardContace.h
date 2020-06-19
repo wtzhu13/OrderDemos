@@ -14,9 +14,11 @@ class PhoneCardContace
 private:
 
 protected:
+    
+public:
     string name;
     string phoneNum;
-public:
+
     PhoneCardContace(string name = "0", string phoneNum = "0");
     ~PhoneCardContace();  
     void setInfo(string name, string phoneNum);
