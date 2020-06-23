@@ -7,5 +7,7 @@ void showMainMenu();
 void showAddGoodMenu();
 void showDelGoodMenu();
 void showSortMenu();
+void showFindGoodMenu();
+void showChangeInfoMenu();
 
 #endif

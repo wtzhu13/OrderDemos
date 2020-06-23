@@ -30,10 +30,10 @@ int main(int argc, char const *argv[])
             delGood();
             break;
         case 4:
-            sortByPrice();
+            sortGoodList();
             break;
         case 5:
-            /* code */
+            findGoodByName();
             break;
         case 6:
             /* code */
