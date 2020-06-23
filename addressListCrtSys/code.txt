@@ -1,0 +1,872 @@
+main.cpp:
+#include "ui.h"
+#include "user.h"
+
+int main()
+{
+    User user;
+    Ui ui;
+    
+    ui.showMainMenu();
+    int menuChoice;
+    cin >> menuChoice;
+    switch (menuChoice)
+    {
+    case 1:
+        user.addUser();
+        break;
+    case 2:
+        user.delContase();
+        break;
+    case 3:
+        user.modifyInfo();
+        break;
+    case 4:
+        user.findContase();
+        break;
+    case 5:
+        user.showAllContaces();
+        break;
+    case 6:
+        user.fromPhoneToCard();
+        break;
+    case 7:
+        user.fromCardToPhone();
+        break;
+    case 0:
+        exit(0);
+        break;
+    default:
+        break;
+    }
+
+    return 0;
+}
+
+global.cpp:
+#include <iostream>
+#include "phoneCardContace.h"
+#include "phonecontace.h"
+
+using namespace std;
+
+//重载输出运算符,手机卡联系人
+ostream& operator<<(ostream& out, PhoneCardContace& p) 
+{
+	out << "name:" << p.name << " num:" << p.phoneNum;
+	return out;
+}
+
+//重载输入运算符,手机卡联系人
+istream & operator>>(istream & in, PhoneCardContace& p){
+    in >> p.name >> p.phoneNum;
+    return in;
+}
+
+//重载输入运算符，手机联系人
+istream & operator>>(istream & in, PhoneContace & A)
+{
+    in >> A.name >> A.phoneNum >> A.nativePlace >> A.qqNum;
+    return in;
+}
+
+//重载输出运算符，手机联系人
+ostream& operator<<(ostream& out, PhoneContace& p) {
+	out << "name:" << p.name << " num:" << p.phoneNum << " nativePlace:" << p.nativePlace << " QQ:" << p.qqNum;
+	return out;
+}
+
+phoneAddressBook.cpp:
+#include "phoneAddressBook.h"
+
+PhoneAddressBook::PhoneAddressBook(/* args */)
+{
+    this->contacesNum = 0;
+    this->getContacesNum();
+    contaceList = new PhoneContace*[this->contacesNum];
+    this->initContacesList();
+}
+
+PhoneAddressBook::~PhoneAddressBook()
+{
+    delete[] this->contaceList;
+}
+
+/***
+ * 将文件中的数据放到内存空间
+ * */
+void PhoneAddressBook::initContacesList()
+{
+    ifstream ifs;
+    ifs.open("phoneList.txt", ios::in);
+    if (!ifs.is_open())
+    {
+        cout << "打开phoneList.txt失败！" << endl;
+    }
+    // 定义临时变量存放文件中的参数
+    string name;
+    string phoneNum;
+    string nativePlace;
+    string QQNum;
+    int i = 0;
+    // 遍历文件，并创建新的手机联系人对象，并加入到数组中
+    while (ifs >> name && ifs >> phoneNum 
+            && ifs >> nativePlace && ifs >> QQNum)
+    {
+        PhoneContace *phoneContace = NULL;
+        // 修改用户信息
+        phoneContace = new PhoneContace();
+        phoneContace->setInfo(name, phoneNum, nativePlace, QQNum);
+        // 将用户放到数组中
+        this->contaceList[i] = phoneContace;
+        i++;
+    }
+    ifs.close();
+}
+
+/***
+ * 获取联系人数量
+ * */
+void PhoneAddressBook::getContacesNum()
+{
+    // 便利手机通讯录文件
+    ifstream ifs;
+    ifs.open("phoneList.txt", ios::in);
+    if (!ifs.is_open())
+    {
+        cout << "phoneList.txt打开失败！" << endl;
+    }
+    string buf;
+    // 读一行，那么就说明有个联系人，数量加一
+    while (getline(ifs, buf))
+    {
+        this->contacesNum++;
+    } 
+    ifs.close();
+}
+
+/***
+ * 新增一个联系人
+ * */
+void PhoneAddressBook::addUser()
+{
+    // 如果联系人达到1000则表明存储满了
+    this->getContacesNum();
+    // cout << this->contacesNum << endl;
+    if (this->contacesNum >= 1000)
+    {
+        cout << "空间不足" << endl;
+        return;
+    }
+
+    PhoneContace *phoneContace = NULL;
+    phoneContace = new PhoneContace();
+    cin >> *phoneContace;
+
+    // 添加一个人后新的人数
+    int newContacesNum = this->contacesNum + 1;
+    // 开辟一块新的空间
+    PhoneContace **newContaceList = new PhoneContace*[newContacesNum];
+    
+    // cout << *contaceList[0] << endl;
+    //将原空间下内容存放到新空间下
+    // cout << "ok0" << endl;
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        newContaceList[i] = this->contaceList[i];
+    }
+    // cout << "ok1" << endl;
+    // 将新增的用户放进数组
+    newContaceList[newContacesNum] = phoneContace;
+    // cout << "添加用户成功!!!" << endl;
+    // 释放原有空间
+    delete[] this->contaceList;
+    this->contaceList = NULL;
+    // 将新的地址更新到数组
+    this->contaceList = newContaceList;
+    // 释放新的空间
+    delete[] newContaceList;
+    newContaceList = NULL;
+    // 用户数量增加
+    this->contacesNum++;
+    // cout << "ok" << endl;
+    // 将信息存放到本地文件中
+    ofstream ofs;
+    ofs.open("phoneList.txt", ios::app);
+    cout << "save" << endl;
+    ofs << phoneContace->name << " " << phoneContace->phoneNum 
+        << " " << phoneContace->nativePlace << " " << phoneContace->qqNum << endl;
+    ofs.close();
+    // this->saveToFile();
+    cout << "添加用户成功！" << endl;
+
+}
+
+/***
+ * 判断联系人是否存在
+ * */
+int PhoneAddressBook::isExist(string phoneNum)
+{
+    int index = -1;
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        // 找到电话相同的就返回索引
+        if (this->contaceList[i]->phoneNum == phoneNum)
+        {
+            index = i;
+            break;
+        }     
+    }
+    // 没有就直接返回0
+    return index;
+}
+
+/***
+ * 删除联系人
+ * */
+void PhoneAddressBook::delUser()
+{
+    string phoneNum;
+    cout << "请输入号码：";
+    cin >> phoneNum;
+    int index = this->isExist(phoneNum);
+    if (index != -1)
+    {
+        for (int i = index; i < this->contacesNum-1; i++)
+        {
+            this->contaceList[i] = this->contaceList[i+1];
+        }   
+        this->contacesNum--;
+        this->saveToFile();
+        cout << "删除成功" << endl;    
+    }
+    
+}
+
+/***
+ * 保存到本地
+ * */
+void PhoneAddressBook::saveToFile()
+{
+    // cout << "save" << endl;
+    ofstream ofs;
+    ofs.open("phoneList.txt", ios::out);
+    if (!ofs.is_open())
+    {
+        cout << "phoneList.txt打开失败" << endl;
+        return;
+    }
+    
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        ofs << this->contaceList[i]->name << " "
+            << this->contaceList[i]->phoneNum << " "
+            << this->contaceList[i]->nativePlace << " "
+            << this->contaceList[i]->qqNum << endl;
+    }
+    ofs.close();
+    // cout << "save end" << endl;
+
+}
+
+/***
+ * 查看
+ * */
+void PhoneAddressBook::showAllUser()
+{
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        cout << *(this->contaceList[i]) << endl;
+    }
+}
+
+/***
+ * 修改
+ * */
+void PhoneAddressBook::modifyInfo(string phoneNum)
+{
+    
+    int index = this->isExist(phoneNum);
+    if (index == -1)
+    {
+        cout << "手机中不存在改联系人" << endl;
+        return;
+    }
+    this->ui.showAddUserMenu(1);
+    PhoneContace *phoneContace = NULL;
+    phoneContace = new PhoneContace();
+    cin >> *phoneContace;
+    this->contaceList[index] = phoneContace;
+    this->saveToFile();
+    cout << "修改成功" << endl;
+}
+
+/***
+ * 查询
+ * */
+void PhoneAddressBook::findUserInfo(string name)
+{
+    int flag = 0;
+    // this->initContacesList();
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        if (this->contaceList[i]->name == name)
+        {
+            flag = 1;
+            cout << *(this->contaceList[i]) << endl;
+        }      
+    }
+    if (!flag)
+    {
+        cout << "卡中不存在该联系人" << endl;
+    }
+}
+
+phoneCardAddressBook.cpp:
+#include "phoneCardAddressBook.h"
+
+PhoneCardAddressBook::PhoneCardAddressBook(/* args */)
+{
+    this->contacesNum = 0;
+    this->getContacesNum();
+    contaceList = new PhoneCardContace*[this->contacesNum];
+    this->initContacesList();
+}
+
+PhoneCardAddressBook::~PhoneCardAddressBook()
+{
+    delete[] this->contaceList;
+}
+
+/***
+ * 初始化用户列表
+ * */
+void PhoneCardAddressBook::initContacesList()
+{
+    ifstream ifs;
+    ifs.open("cardList.txt", ios::in);
+    if (!ifs.is_open())
+    {
+        cout << "phoneList.txt打开失败" << endl;
+    }
+    // 临时变量存放文件内容
+    string name;
+    string phoneNum;
+    int i = 0;
+    // 遍历文件
+    while (ifs >> name && ifs >> phoneNum )
+    {
+        PhoneCardContace *phoneCardContace = NULL;
+        phoneCardContace = new PhoneCardContace();
+        phoneCardContace->setInfo(name, phoneNum);
+        // 把文件内容添加到列表
+        this->contaceList[i] = phoneCardContace;
+        i++;
+    }
+    ifs.close();
+}
+
+/***
+ * 获取联系人数量
+ * */
+void PhoneCardAddressBook::getContacesNum()
+{
+    // 遍历文件
+    ifstream ifs;
+    ifs.open("cardList.txt", ios::in);
+    if (!ifs.is_open())
+    {
+        cout << "cardList.txt打开失败" << endl;
+    }
+    string buf;
+    // 遍历文件，记录行数
+    while (getline(ifs, buf))
+    {
+        this->contacesNum++;
+    } 
+    ifs.close();
+}
+
+/***
+ * 添加用户
+ * */
+void PhoneCardAddressBook::addUser()
+{
+    // 首先获取用户数量
+    this->getContacesNum();
+    // cout << this->contacesNum << endl;
+    if (this->contacesNum >= 1000)
+    {
+        cout << "空间不足" << endl;
+        return;
+    }
+
+    PhoneCardContace *phoneCardContace = NULL;
+    phoneCardContace = new PhoneCardContace();
+    cin >> *phoneCardContace;
+
+    // 用户数量加一
+    int newContacesNum = this->contacesNum + 1;
+    // 新建一个临时存放
+    PhoneCardContace **newContaceList = new PhoneCardContace*[newContacesNum];
+    
+    cout << *contaceList[0] << endl;
+    // 将旧数据拷贝到新空间
+    
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        newContaceList[i] = this->contaceList[i];
+    }
+
+    // 经新增用户放进数组
+    newContaceList[newContacesNum] = phoneCardContace;
+    // cout << "娣诲姞鐢ㄦ埛鎴愬姛!!!" << endl;
+    // 释放原有空间
+    delete[] this->contaceList;
+    this->contaceList = NULL;
+    // 将新的地址给列表指针
+    this->contaceList = newContaceList;
+    // 释放新空间
+    delete[] newContaceList;
+    newContaceList = NULL;
+    // 用户数加一
+    this->contacesNum++;
+
+    // 将信息保存到本地
+    ofstream ofs;
+    ofs.open("cardList.txt", ios::app);
+    ofs << phoneCardContace->name << " " << phoneCardContace->phoneNum << endl;
+    ofs.close();
+    cout << "添加用户成功" << endl;
+
+}
+
+/***
+ * 判断联系人是否存在
+ * */
+int PhoneCardAddressBook::isExist(string phoneNum)
+{
+    int index = -1;
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        // 找到电话相同的就返回索引
+        if (this->contaceList[i]->phoneNum == phoneNum)
+        {
+            index = i;
+            break;
+        }     
+    }
+    // 没有就直接返回0
+    return index;
+}
+
+/***
+ * 保存到本地
+ * */
+void PhoneCardAddressBook::saveToFile()
+{
+    ofstream ofs;
+    ofs.open("cardList.txt", ios::out);
+    if (!ofs.is_open())
+    {
+        cout << "cardList.txt打开失败" << endl;
+        return;
+    }
+    
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        ofs << this->contaceList[i]->name << " "
+            << this->contaceList[i]->phoneNum << endl;
+    }
+    ofs.close();
+}
+
+/***
+ * 删除
+ * */
+void PhoneCardAddressBook::delUser()
+{
+    string phoneNum;
+    cout << "请输入号码：";
+    cin >> phoneNum;
+    int index = this->isExist(phoneNum);
+    if (index != -1)
+    {
+        for (int i = index; i < this->contacesNum-1; i++)
+        {
+            this->contaceList[i] = this->contaceList[i+1];
+        }   
+        this->contacesNum--;
+        this->saveToFile();
+        cout << "删除成功" << endl;    
+    }
+}
+
+/***
+ * 查看
+ * */
+void PhoneCardAddressBook::showAllUser()
+{
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        cout << *(this->contaceList[i]) << endl;
+    }
+}
+
+/***
+ * 查询
+ * */
+void PhoneCardAddressBook::modifyInfo(string phoneNum)
+{
+    int index = this->isExist(phoneNum);
+    if (index == -1)
+    {
+        cout << "卡中不存在改联系人" << endl;
+        return;
+    }
+    this->ui.showAddUserMenu(2);
+    PhoneCardContace *phoneCardContace = NULL;
+    phoneCardContace = new PhoneCardContace();
+    cin >> *phoneCardContace;
+    this->contaceList[index] = phoneCardContace;
+    this->saveToFile();
+    cout << "修改成功" << endl;
+}
+
+void PhoneCardAddressBook::findUserInfo(string name)
+{
+    int flag = 0;
+    for (int i = 0; i < this->contacesNum; i++)
+    {
+        if (this->contaceList[i]->name == name)
+        {
+            flag = 1;
+            cout << *(this->contaceList[i]) << endl;
+        }      
+    }
+    if (!flag)
+    {
+        cout << "卡中不存在该联系人" << endl;
+    }
+    
+}
+
+phoneCardContace.cpp:
+#include "phoneCardContace.h"
+
+/**
+ * 构造函数 
+*/
+PhoneCardContace::PhoneCardContace(string name, string phoneNum)
+{
+    this->name = name;
+    this->phoneNum = phoneNum;
+}
+
+/**
+ * 析构函数 
+*/
+PhoneCardContace::~PhoneCardContace()
+{
+}
+
+/**
+ * 设置成员属性 
+*/
+void PhoneCardContace::setInfo(string name, string phoneNum)
+{
+    this->name = name;
+    this->phoneNum = phoneNum;
+}
+
+/**
+ * 设置成员属性 
+*/
+void PhoneCardContace::modifyInfo()
+{
+    
+}
+
+phonecontace.cpp:
+#include "phoneContace.h"
+
+PhoneContace::PhoneContace (/* args */)
+{
+}
+
+PhoneContace::~PhoneContace()
+{
+}
+
+
+/**
+ * 设置成员属性 
+*/
+void PhoneContace::setInfo(string name, string phoneNum, string nativePlace, string QQNum)
+{
+    this->name = name;
+    this->phoneNum = phoneNum;
+    this->nativePlace = nativePlace;
+    this->qqNum = QQNum;
+}
+
+/**
+ * 设置成员属性 
+*/
+void PhoneContace::modifyInfo(string name, string phoneNum, string nativePlace, string QQNum)
+{
+    this->name = name;
+    this->phoneNum = phoneNum;
+    this->nativePlace = nativePlace;
+    this->qqNum = QQNum;
+}
+
+ui.cpp:
+#include "ui.h"
+
+Ui::Ui(/* args */)
+{
+}
+
+Ui::~Ui()
+{
+}
+
+/**
+ * 显示主菜单
+*/
+void Ui::showMainMenu()
+{
+    cout << "系统功能：" << endl;
+    cout << "1.新建联系人" << endl;
+    cout << "2.删除联系人" << endl;
+    cout << "3.修改信息" << endl;
+    cout << "4.查询" << endl;
+    cout << "5.浏览" << endl;
+    cout << "6.从手机复制到卡" << endl;
+    cout << "7.从卡复制到手机" << endl;
+    cout << "0.退出" << endl;
+    cout << "请选择功能序号：";
+}
+
+/**
+ * 显示添加用户菜单
+*/
+void Ui::showAddUserMenu(int i)
+{
+    switch (i)
+    {
+    case 0:
+        cout << "请选择存储方式：" << endl;
+        cout << "1.手机存储" << endl;
+        cout << "2.手机卡存储" << endl;
+        cout << "请选择存储方式编号：";
+        break;
+    case 1:
+        cout << "请输入联系人信息：" << endl;
+        cout << "格式：姓名 电话号码 籍贯 QQ，中间空格隔开 " << endl;
+        cout << "如：Tom 13511112222 Beijing 123456987" << endl;
+        cout << "请输入信息：";
+        break;
+    case 2:
+        cout << "请输入联系人信息：" << endl;
+        cout << "格式：姓名 电话号码，中间空格隔开 " << endl;
+        cout << "如：Tom 13511112222" << endl;
+        cout << "请输入信息：";
+        break;
+    default:
+        break;
+    }
+}
+
+user.cpp:
+#include "user.h"
+#include "ui.h"
+
+User::User(/* args */)
+{
+}
+
+User::~User()
+{
+}
+
+/**
+ * 新增用户
+*/
+void User::addUser()
+{
+    // 显示菜单
+    ui.showAddUserMenu(0);
+    int choiceSaveAdd;
+    cin >> choiceSaveAdd;
+    // 显示存储方式菜单
+    ui.showAddUserMenu(choiceSaveAdd);
+    // 利用多肽实现调用
+    switch (choiceSaveAdd)
+    {
+    case 1:
+        this->saveUser(this->pab);
+        break;
+    case 2:
+        this->saveUser(this->pcab);
+        break;
+    default:
+        break;
+    }
+}
+
+/**
+ * 保存用户信息
+*/
+void User::saveUser(AddressBook &adb)
+{
+    adb.addUser();
+}
+
+/**
+ * 删除联系人
+*/
+void User::delContase()
+{
+    pab.delUser();
+    pcab.delUser();
+}
+
+/**
+ * 查询联系人
+*/
+void User::findContase()
+{
+    string name;
+    cout << "请输入姓名：" ;
+    cin >> name;
+    pab.findUserInfo(name);
+    pcab.findUserInfo(name);
+}
+
+/**
+ * 修改联系人信息
+*/
+void User::modifyInfo()
+{
+    string phoneNum;
+    cout << "请输入号码：" ;
+    cin >> phoneNum;
+    pab.modifyInfo(phoneNum);
+    pcab.modifyInfo(phoneNum);
+}
+
+/**
+ * 显示所有联系人
+*/
+void User::showAllContaces()
+{
+    // pcab.initContacesList();
+    // pab.initContacesList();
+    // 先遍历手机中的
+    for (int i = 0; i < pab.contacesNum; i++)
+    {
+        cout << *(pab.contaceList[i]) << endl;
+    }
+    // 遍历卡里的,且只打印手机中没有的
+    for (int j = 0; j < pcab.contacesNum; j++)
+    {
+        int flag = 0;
+        for (int i = 0; i < pab.contacesNum; i++)
+        {
+            if (pab.contaceList[i]->phoneNum == pcab.contaceList[j]->phoneNum)
+            {
+                flag = 1;
+                break;
+            }
+        } 
+        if (!flag)
+        {
+            cout << *(pcab.contaceList[j]) << endl;  
+        }   
+    }    
+}
+
+/**
+ * 从手机保存到卡
+*/
+void User::fromPhoneToCard()
+{
+    pcab.initContacesList();
+    pab.initContacesList();
+    for (int i = 0; i < pab.contacesNum; i++)
+    {
+        int flag = 0;
+        for (int j = 0; j < pcab.contacesNum; j++)
+        {
+            if (pab.contaceList[i]->phoneNum == pcab.contaceList[j]->phoneNum)
+            {
+                flag = 1;
+                break;
+            }
+                       
+        } 
+        if (!flag)
+        {
+            ofstream ofs;
+            ofs.open("cardList.txt", ios::app);
+            ofs << pab.contaceList[i]->name << " " << pab.contaceList[i]->phoneNum << endl;
+            ofs.close();
+        }  
+    }
+    cout << "导出成功" << endl;
+}
+
+/**
+ * 从卡保存到手机
+*/
+void User::fromCardToPhone()
+{
+    pcab.initContacesList();
+    pab.initContacesList();
+    for (int i = 0; i < pcab.contacesNum; i++)
+    {
+        int flag = 0;
+        for (int j = 0; j < pab.contacesNum; j++)
+        {
+            if (pab.contaceList[i]->phoneNum == pcab.contaceList[j]->phoneNum)
+            {
+                flag = 1;
+                break;
+            }
+                       
+        } 
+        if (!flag)
+        {
+            ofstream ofs;
+            ofs.open("phoneList.txt", ios::app);
+            ofs << pcab.contaceList[i]->name << " " << pcab.contaceList[i]->phoneNum << endl;
+            ofs.close();
+        }  
+    }
+    cout << "导入成功" << endl;
+}
+
+addressBook.h:
+#pragma once
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class AddressBook
+{
+private:
+    /* data */
+public:
+    AddressBook(/* args */){};
+    virtual void addUser() = 0;
+    virtual void delUser() = 0;
+    virtual void showAllUser() = 0;
+    void modifyInfo(string phoneNum){};
+    void findUserInfo(string phoneNum){ };
+    virtual ~AddressBook(){};
+};
+
+
