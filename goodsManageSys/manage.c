@@ -104,7 +104,7 @@ void showGoodList()
     printf("商品列表：\n");
     for (int i = 0; i < goodsNum; i++)
     {
-        printf("name:%s price:%d saleVolume:%d \n",
+        printf("name:%s\tprice:%d\tsaleVolume:%d \n",
          goodList[i]->name, goodList[i]->price, goodList[i]->saleVolume);
     }   
 }
@@ -257,13 +257,14 @@ void sortByPrice()
 {
     for (int i = 0; i < goodsNum-1; i++)
     {
-        for (size_t j = i+1; i < goodsNum; i++)
+        for (int j = i+1; j < goodsNum; j++)
         {
             if (goodList[i]->price > goodList[j]->price)
             {
                 Good *goodTmp;
                 goodTmp = goodList[i];
                 goodList[i] = goodList[j];
+                goodList[j] = goodTmp;
                 goodTmp = NULL;
             }           
         }        
