@@ -264,6 +264,7 @@ void sortByPrice()
                 Good *goodTmp;
                 goodTmp = goodList[i];
                 goodList[i] = goodList[j];
+                goodTmp = NULL;
             }           
         }        
     }
