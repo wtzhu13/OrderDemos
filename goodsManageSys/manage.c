@@ -51,7 +51,7 @@ void initList()
         {
             break;
         }      
-        printf("%s %d %d\n", goodFromTxtP->name, goodFromTxtP->price, goodFromTxtP->saleVolume);
+        // printf("%s %d %d\n", goodFromTxtP->name, goodFromTxtP->price, goodFromTxtP->saleVolume);
         // 将该指针赋值给数组中的指针
         // 这里不用释放goodFromTxtP指向的内存，因为释放了数组中的指针指向也释放了
         goodList[count] = goodFromTxtP;
@@ -89,7 +89,7 @@ void getGoodsNum()
     }
     // 关闭文件
     fclose(fp);
-    printf("goodsNum: %d\n", goodsNum);
+    // printf("goodsNum: %d\n", goodsNum);
 }
 
 /*******************************************
@@ -104,14 +104,14 @@ void showGoodList()
     printf("商品列表：\n");
     for (int i = 0; i < goodsNum; i++)
     {
-        printf("name:%s price:%d saleVolume:%d \n",
+        printf("name:%s \tprice:%d \tsaleVolume:%d \n",
          goodList[i]->name, goodList[i]->price, goodList[i]->saleVolume);
     }   
 }
 
 /*******************************************
 * 函数名：
-* 功能：
+* 功能：添加商品功能
 * 参数：
 * 返回值：
 ********************************************/
@@ -237,7 +237,7 @@ void sortGoodList()
         sortByPrice();
         break;
     case 2:
-        /* code */
+        sortBySaleVolume();
         break;
     case 3:
         /* code */
@@ -249,7 +249,7 @@ void sortGoodList()
 
 /*******************************************
 * 函数名：
-* 功能：
+* 功能：按售价排序
 * 参数：
 * 返回值：
 ********************************************/
@@ -257,16 +257,105 @@ void sortByPrice()
 {
     for (int i = 0; i < goodsNum-1; i++)
     {
-        for (size_t j = i+1; i < goodsNum; i++)
+        for (int j = i+1; j < goodsNum; j++)
         {
             if (goodList[i]->price > goodList[j]->price)
             {
                 Good *goodTmp;
                 goodTmp = goodList[i];
                 goodList[i] = goodList[j];
+                goodList[j] = goodTmp;
                 goodTmp = NULL;
             }           
         }        
     }
     showGoodList();
+}
+
+/*******************************************
+* 函数名：
+* 功能：按销量排序
+* 参数：
+* 返回值：
+********************************************/
+void sortBySaleVolume()
+{
+    for (int i = 0; i < goodsNum-1; i++)
+    {
+        for (int j = i+1; j < goodsNum; j++)
+        {
+            if (goodList[i]->saleVolume > goodList[j]->saleVolume)
+            {
+                Good *goodTmp;
+                goodTmp = goodList[i];
+                goodList[i] = goodList[j];
+                goodList[j] = goodTmp;
+                goodTmp = NULL;
+            }           
+        }        
+    }
+    showGoodList();
+}
+
+/*******************************************
+* 函数名：
+* 功能：
+* 参数：
+* 返回值：
+********************************************/
+void findGoodByName()
+{
+    // 获取需要查询的商品的名称
+    showFindGoodMenu();
+    char goodNameFound[13];
+    scanf("%s", goodNameFound);
+
+    // 遍历列表判断是否有名称符合和
+    for (int i = 0; i < goodsNum; i++)
+    {
+        if (strcmp(goodList[i]->name, goodNameFound) == 0) 
+        {
+            printf("您查询的商品详情:\n");
+            printf("name:%s \tprice:%d \tsaleVolume:%d \n",
+                goodList[i]->name, goodList[i]->price, goodList[i]->saleVolume);
+            return;
+        }    
+    }
+    printf("您查询的商品不存在!\n");
+}
+
+/*******************************************
+* 函数名：
+* 功能：
+* 参数：
+* 返回值：
+********************************************/
+void changeInfoByName()
+{
+    // 获取需要修改的商品名称
+    showChangeInfoMenu();
+    char goodNameFound[13];
+    scanf("%s", goodNameFound);
+
+    // 重新获取商品信息
+    showAddGoodMenu();
+    char newName[13];
+    int newPrice, newSaleVolume;
+    scanf("%s %d %d", newName, &newPrice, &newSaleVolume);
+
+    // 查询名称相同的
+    for (int i = 0; i < goodsNum; i++)
+    {
+        // 找到指定商品后重新赋值一次
+        if (strcmp(goodList[i]->name, goodNameFound) == 0) 
+        {
+            strcpy(goodList[i]->name, newName);
+            goodList[i]->price = newPrice;
+            goodList[i]->saleVolume = newSaleVolume;
+            // 数据发生变化后重新保存到文件中
+            saveDataToFile();
+            return;
+        }    
+    }
+    printf("该商品不存在!\n");
 }

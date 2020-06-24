@@ -28,5 +28,8 @@ void delGood();
 int isExit(char *goodName);
 void sortGoodList();
 void sortByPrice();
+void sortBySaleVolume();
+void findGoodByName();
+void changeInfoByName();
 
 #endif
