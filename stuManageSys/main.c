@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
                 /* code */
                 break;
             case 4:
-                /* code */
+                showAllInfo();
                 break;
             case 5:
                 /* code */
@@ -38,6 +38,9 @@ int main(int argc, char const *argv[])
                 /* code */
                 break;
             case 7:
+                /* code */
+                break;
+            case 8:
                 /* code */
                 break;
             case 0:

@@ -29,13 +29,33 @@ void initSys()
 void addStuInfo()
 {
     showAddMenu();
+    // 获取用户输入的信息
     Stu stuTemp;
     scanf("%s %s %d %c %d %d %d", 
     stuTemp.id, stuTemp.name, &stuTemp.class, &stuTemp.sex,
     &stuTemp.Math, &stuTemp.Chinese, &stuTemp.English);
-    printf("%s %s %d %c %d %d %d\n", 
-    stuTemp.id, stuTemp.name, stuTemp.class, stuTemp.sex,
-    stuTemp.Math, stuTemp.Chinese, stuTemp.English);
+
+    // 新建一个数组，容量加一
+    int newStuNum = stuNum + 1;
+    Stu *newStuList = (Stu*)malloc(newStuNum * sizeof(Stu));
+
+    // 把之前的信息拷贝到新的地址并把新增的也加进去
+    for (int i = 0; i < stuNum; i++)
+    {
+        newStuList[i] = stuList[i];
+    }
+    newStuList[stuNum] = stuTemp;
+
+    // 更新数组
+    if (stuList != NULL)
+    {
+        free(stuList);
+        stuList = NULL;
+    }
+    stuList = newStuList;
+    stuNum = newStuNum;
+    newStuList = NULL;
+    
     saveToFile();
     waitPress();
 }
@@ -59,10 +79,32 @@ void saveToFile()
     // 循环遍历数组将信息保存到本地文件
     for (int i = 0; i < stuNum; i++)
     {
-        fprintf(fp, "%s,%s,%d,%c,%d,%d,%d\n", 
-        stuList[i].id, stuList[i].name, stuList[i].class,stuList[i].sex,
+        fprintf(fp, "%s %s %d %c %d %d %d\n", 
+        stuList[i].id, stuList[i].name, stuList[i].class, stuList[i].sex,
+        stuList[i].Math, stuList[i].Chinese, stuList[i].English);
+
+        printf("%s,%s,%d,%c,%d,%d,%d\n", 
+        stuList[i].id, stuList[i].name, stuList[i].class, stuList[i].sex,
         stuList[i].Math, stuList[i].Chinese, stuList[i].English);
     }
     // 关闭文件
     fclose(fp);
+    printf("ok\n");
+}
+
+/*******************************************
+* 函数名：
+* 功能：显示所有人的信息
+* 参数：
+* 返回值：
+********************************************/
+void showAllInfo()
+{
+    for (int i = 0; i < stuNum; i++)
+    {
+        printf("%s,%s,%d,%c,%d,%d,%d\n", 
+        stuList[i].id, stuList[i].name, stuList[i].class, stuList[i].sex,
+        stuList[i].Math, stuList[i].Chinese, stuList[i].English);
+    }
+    
 }
