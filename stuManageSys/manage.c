@@ -22,6 +22,29 @@ void initSys()
 
 /*******************************************
 * 函数名：
+* 功能：获取学生人数
+* 参数：
+* 返回值：
+********************************************/
+void getStuNum()
+{
+    FILE *fp;
+    fp = fopen("stuInfo.txt", "r");
+    if (fp == NULL)
+    {
+        printf("getStuNum(): stuInfo.tx opened err");
+    }
+    while (!feof(fp))
+    {
+        int flag = fgetc(fp);
+            if(flag == '\n')
+                stuNum++;
+    }
+    fclose(fp);
+}
+
+/*******************************************
+* 函数名：
 * 功能：添加学生信息
 * 参数：
 * 返回值：

@@ -22,5 +22,6 @@ void addStuInfo();
 void initSys();
 void saveToFile();
 void showAllInfo();
+void getStuNum();
 
 #endif
