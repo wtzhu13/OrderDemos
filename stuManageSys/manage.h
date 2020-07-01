@@ -23,5 +23,13 @@ void initSys();
 void saveToFile();
 void showAllInfo();
 void getStuNum();
+void initList();
+void delStuInfo();
+void modifyStuInfo();
+void showPointCourseGrade();
+void showAllStuGrade();
+void showPointStuGrade();
+void GradeAnalyse();
+int isExist();
 
 #endif

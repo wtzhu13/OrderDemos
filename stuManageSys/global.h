@@ -12,6 +12,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define Windows 1
+
+#if Windows
+    #define CLEAR "cls"
+#else
+    #define CLEAR "clear"
+#endif
+
 typedef struct Student
 {
     char id[10];

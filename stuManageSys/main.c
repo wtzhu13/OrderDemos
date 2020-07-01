@@ -12,6 +12,7 @@
 
 int main(int argc, char const *argv[])
 {
+    initSys();
     while (1)
     {
         showMainMenu();
@@ -23,25 +24,25 @@ int main(int argc, char const *argv[])
                 addStuInfo();
                 break;
             case 2:
-                /* code */
+                delStuInfo();
                 break;
             case 3:
-                /* code */
+                modifyStuInfo();
                 break;
             case 4:
                 showAllInfo();
                 break;
             case 5:
-                /* code */
+                showPointCourseGrade();
                 break;
             case 6:
-                /* code */
+                showAllStuGrade();
                 break;
             case 7:
-                /* code */
+                showPointStuGrade();
                 break;
             case 8:
-                /* code */
+                GradeAnalyse();
                 break;
             case 0:
                 exit(0);
@@ -50,5 +51,5 @@ int main(int argc, char const *argv[])
                 break;
         }
     }
-        return 0;
+    return 0;
 }
