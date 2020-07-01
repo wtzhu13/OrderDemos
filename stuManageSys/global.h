@@ -33,5 +33,4 @@ typedef struct Student
 
 void waitPress();
 
-
 #endif

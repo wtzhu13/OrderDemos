@@ -8,5 +8,7 @@
 
 void showMainMenu();
 void showAddMenu();
+void showCourseGradeMenu();
+void showAnalyseMenu();
 
 #endif

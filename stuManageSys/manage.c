@@ -117,7 +117,11 @@ void addStuInfo()
     newStuList = NULL;
     
     saveToFile();
+#if Windows   
+    system("pause");
+#else 
     waitPress();
+#endif
 }
 
 /*******************************************
@@ -181,9 +185,10 @@ void showAllInfo()
 ********************************************/
 void delStuInfo()
 {
+    system(CLEAR);
     // 获取需要删除的学生的学号
     char idFound[13];
-    printf("请输入需要删除的学生的学号：\n");
+    printf("请输入需要删除的学生的学号：");
     scanf("%s", idFound);
     // 找到该学生
     int indexFound = isExist(idFound);
@@ -199,6 +204,12 @@ void delStuInfo()
     }
     // 总得数据减一
     stuNum--;
+    printf("学号：%s的学生信息已删除！", idFound);
+#if Windows   
+    system("pause");
+#else 
+    waitPress();
+#endif
 }
 
 /*******************************************
@@ -223,55 +234,155 @@ int isExist(char *idFound)
 
 /*******************************************
 * 函数名：
-* 功能：
+* 功能：修改学生信息
 * 参数：
 * 返回值：
 ********************************************/
 void modifyStuInfo()
 {
-
+    system(CLEAR);
+    // 获取需要删除的学生的学号
+    char idFound[13];
+    printf("请输入需要删除的学生的学号：");
+    scanf("%s", idFound);
+    int index = isExist(idFound);
+    if (index == -1)
+    {
+        printf("该学生不存在！\n");
+        return;
+    }
+    // 修改信息相当于重新将改学生添加一遍
+    showAddMenu();
+    // 获取用户输入的信息并直接赋值到找到的索引的地方
+    scanf("%s %s %d %c %d %d %d", 
+    stuList[index].id, stuList[index].name, &stuList[index].class, &stuList[index].sex,
+    &stuList[index].Math, &stuList[index].Chinese, &stuList[index].English);
+    // 保存到本地
+    saveToFile();
+#if Windows   
+    system("pause");
+#else 
+    waitPress();
+#endif
 }
 
 /*******************************************
 * 函数名：
-* 功能：
+* 功能：输出指定课程的成绩
 * 参数：
 * 返回值：
 ********************************************/
 void showPointCourseGrade()
 {
-
+    showCourseGradeMenu();
+    int courseChoice;
+    scanf("%d", &courseChoice);
+    for (int i = 0; i < stuNum; i++)
+    {
+        // 根据课程的不同进行打印输出
+        switch (courseChoice)
+        {
+            case 1:
+                printf("学号：%s 数学成绩：%d\n", stuList[i].id, stuList[i].Math);
+                break;
+            case 2:
+                printf("学号：%s 语文成绩：%d\n", stuList[i].id, stuList[i].Chinese);
+                break;
+            case 3:
+                printf("学号：%s 英语成绩：%d\n", stuList[i].id, stuList[i].English);
+                break;
+            default:
+                break;
+        }
+    }
+#if Windows   
+    system("pause");
+#else 
+    waitPress();
+#endif    
 }
 
 /*******************************************
 * 函数名：
-* 功能：
+* 功能：显示所有学生的成绩
 * 参数：
 * 返回值：
 ********************************************/
 void showAllStuGrade()
 {
-
+    system(CLEAR);
+    for (int i = 0; i < stuNum; i++)
+    {
+        printf("学号：%s,姓名：%s,数学成绩：%d,语文成绩：%d,英语成绩：%d\n", 
+        stuList[i].id, stuList[i].name, 
+        stuList[i].Math, stuList[i].Chinese, stuList[i].English);
+    }
+#if Windows   
+    system("pause");
+#else 
+    waitPress();
+#endif
 }
 
 /*******************************************
 * 函数名：
-* 功能：
+* 功能：输出指定学生的成绩
 * 参数：
 * 返回值：
 ********************************************/
 void showPointStuGrade()
 {
-
+    system(CLEAR);
+    // 获取需要删除的学生的学号
+    char idFound[13];
+    printf("请输入需要需要显示的学生的学号：");
+    scanf("%s", idFound);
+    int index = isExist(idFound);
+    if (index == -1)
+    {
+        printf("该学生不存在！\n");
+        return;
+    }
+    printf("学号：%s,姓名：%s,数学成绩：%d,语文成绩：%d,英语成绩：%d\n", 
+        stuList[index].id, stuList[index].name, 
+        stuList[index].Math, stuList[index].Chinese, stuList[index].English);
+#if Windows   
+    system("pause");
+#else 
+    waitPress();
+#endif
 }
 
 /*******************************************
 * 函数名：
-* 功能：
+* 功能：学生成绩分析
 * 参数：
 * 返回值：
 ********************************************/
 void GradeAnalyse()
 {
-
+    int analyseChoice;
+    // 显示菜单
+    showAnalyseMenu();
+    scanf("%d", &analyseChoice);
+    switch (analyseChoice)
+    {
+        // 分析内容包括平均分，最高最低分，不及格人数，优秀人数等
+        case 1:
+            // 数学成绩分析
+            break;
+        case 2:
+            // 语文成绩分析
+            break;
+        case 3:
+            // 英语成绩分析
+            break;
+        default:
+            break;
+    }
+#if Windows   
+    system("pause");
+#else 
+    waitPress();
+#endif
 }
